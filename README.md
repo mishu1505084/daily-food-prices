@@ -19,7 +19,7 @@ CSV columns: `date, category, name, pack, final_price_tk, price_per_kg_tk, on_di
 
 ## The web page
 
-`index.html` is a small dashboard. Turn on GitHub Pages (Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`) and it is live at `https://<your-username>.github.io/<repo-name>/`.
+`index.html` is a small dashboard. Turn on GitHub Pages (Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`) and it is live at https://mishu1505084.github.io/daily-food-prices/.
 
 - Filter by category, search, show only discounted items.
 - Sort by protein, calories, iron, calcium, fibre, vitamin A or vitamin C **per ৳100**, or by the cheapest price per 100 g edible or per kg.
