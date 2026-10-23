@@ -47,20 +47,20 @@ table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 thead th{position:sticky;top:0;z-index:2;background:var(--surface);font-size:12px;font-weight:600;color:var(--muted);vertical-align:bottom;line-height:1.25}
 thead th small{display:block;font-weight:400}
-#grid th.sortable{cursor:pointer;user-select:none}
-#grid th.sortable:hover{color:var(--ink)}
-#grid th[aria-sort] {color:var(--accent)}
-#grid th[aria-sort=descending]::after{content:" ↓"}
-#grid th[aria-sort=ascending]::after{content:" ↑"}
-#grid .c-cmp{position:sticky;left:0;z-index:1;background:var(--surface);width:36px;padding-right:0;text-align:center}
-#grid .c-item{position:sticky;left:36px;z-index:1;background:var(--surface);text-align:left;white-space:normal;min-width:220px;max-width:300px;box-shadow:1px 0 0 var(--line)}
-#grid thead .c-cmp,#grid thead .c-item{z-index:3}
-#grid tbody tr{cursor:pointer}
-#grid tbody tr:hover td{background:var(--sunk)}
-#grid .c-price{font-weight:700;font-size:15px}
-#grid td.nut{color:var(--ink)}
-#grid td.top{color:var(--accent);font-weight:700}
-#grid .gap{border-left:1px solid var(--line)}
+.grid th.sortable{cursor:pointer;user-select:none}
+.grid th.sortable:hover{color:var(--ink)}
+.grid th[aria-sort] {color:var(--accent)}
+.grid th[aria-sort=descending]::after{content:" ↓"}
+.grid th[aria-sort=ascending]::after{content:" ↑"}
+.grid .c-cmp{position:sticky;left:0;z-index:1;background:var(--surface);width:36px;padding-right:0;text-align:center}
+.grid .c-item{position:sticky;left:36px;z-index:1;background:var(--surface);text-align:left;white-space:normal;min-width:220px;max-width:300px;box-shadow:1px 0 0 var(--line)}
+.grid thead .c-cmp,.grid thead .c-item{z-index:3}
+.grid tbody tr{cursor:pointer}
+.grid tbody tr:hover td{background:var(--sunk)}
+.grid .c-price{font-weight:700;font-size:15px}
+.grid td.nut{color:var(--ink)}
+.grid td.top{color:var(--accent);font-weight:700}
+.grid .gap{border-left:1px solid var(--line)}
 .iname{display:flex;gap:10px;align-items:center}
 .iname img{width:40px;height:34px;object-fit:cover;border-radius:6px;background:var(--sunk);flex:none}
 .iname b{display:block;font-weight:600;line-height:1.25}
@@ -74,6 +74,11 @@ thead th small{display:block;font-weight:400}
 .tray button{pointer-events:auto;font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 20px;background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow);cursor:pointer}
 .tray .clear{background:var(--surface);color:var(--ink);margin-left:8px}
 dialog{border:0;padding:0;background:var(--surface);color:var(--ink);border-radius:16px;box-shadow:var(--shadow);width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
+dialog.wide{width:min(1300px,calc(100vw - 24px))}
+.dlg .tablebox{max-height:none;margin-top:12px}
+.grid td.best{color:var(--accent);font-weight:700}
+.rm{font:inherit;font-size:18px;line-height:1;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:6px}
+.rm:hover{background:var(--sunk);color:var(--ink)}
 dialog::backdrop{background:rgba(0,0,0,.45)}
 .dlg{padding:20px;overflow:auto;max-height:calc(100vh - 40px)}
 .dlg h2{margin:0 36px 2px 0;font-size:19px;line-height:1.25}
@@ -92,7 +97,7 @@ a{color:var(--accent)}
 svg.spark{width:100%;height:90px;display:block;margin-top:6px}
 footer{margin-top:24px;font-size:13px;color:var(--muted);max-width:900px}
 @media (max-width:560px){
-  #grid .c-item{min-width:150px;max-width:170px}
+  .grid .c-item{min-width:150px;max-width:170px}
   .iname img{display:none}
   .tablebox{max-height:calc(100vh - 80px)}
 }
@@ -117,7 +122,7 @@ footer{margin-top:24px;font-size:13px;color:var(--muted);max-width:900px}
     </div>
   </div>
   <p class="hint" id="hint"></p>
-  <div class="tablebox"><table id="grid" class="num"><thead></thead><tbody></tbody></table></div>
+  <div class="tablebox"><table id="grid" class="grid num"><thead></thead><tbody></tbody></table></div>
 
   <footer>
     Prices are Shwapno's online prices, collected daily at 9 AM Bangladesh time.
@@ -217,10 +222,13 @@ function render(){
   }
 }
 
+function setMode(m){ state.mode = m; $("#m100g").setAttribute("aria-pressed", String(m === "100g")); $("#m100tk").setAttribute("aria-pressed", String(m === "100tk")); render(); }
+
 function tray(){ const n = state.cmp.size; $("#tray").hidden = n === 0; $("#openCmp").textContent = `Compare ${n} item${n===1?"":"s"}`; }
 
 async function detail(it){
   const f = it.f, body = $("#dlgBody");
+  $("#dlg").classList.remove("wide");
   const packG = it.grams && f ? it.grams * f.edible : null;
   const kp = (label, value) => el("div",{class:"kpi"}, el("span",{},label), el("b",{class:"num"},value));
   body.replaceChildren(
@@ -262,23 +270,42 @@ function spark(pts){
   return svg;
 }
 
+// Same columns as the main table, one row per ticked item; the best value in each column is green.
 function compare(){
   const its = ITEMS.filter(i => state.cmp.has(i.id)), body = $("#dlgBody");
-  const rows = [["Price", i => i.price, false, tk], ["Per kg", i => i.price_per_kg, false, tk], ["Per 100 g edible", i => i.cost100, false, tk],
-    // fat and carbs aren't "more is better", so they're shown but never marked best
-    ...NUTRIENTS.map(([k,l,u]) => [`${l} per ৳100 (${u})`, i => i.per100tk[k], k === "fat" || k === "carbs" ? null : true, fmt])];
-  const t = el("table",{class:"num"}, el("thead",{}, el("tr",{}, el("th",{},""), ...its.map(i => el("th",{style:"white-space:normal;min-width:110px"}, i.name)))));
+  if (!its.length) { $("#dlg").close(); return; }
+  const per = state.mode === "100g" ? "per 100 g" : "per ৳100";
+  // cheapest wins for prices, most wins for nutrients; fat and carbs aren't "more is better", so never marked
+  const cols = [["price", i => i.price, -1, tk], ["perkg", i => i.price_per_kg, -1, tk],
+    ...NUTRIENTS.map(([k]) => [k, i => nutrient(i,k), k === "fat" || k === "carbs" ? 0 : 1, fmt])];
+  const best = {};
+  for (const [k, get, dir] of cols) { const v = its.map(get).filter(x => x);
+    best[k] = dir && v.length > 1 ? (dir > 0 ? Math.max(...v) : Math.min(...v)) : null; }
+  const t = el("table",{class:"grid num"}, el("thead",{}, el("tr",{},
+    el("th",{class:"c-cmp", scope:"col"}, ""), el("th",{class:"c-item", scope:"col"}, "Item"),
+    el("th",{scope:"col"}, "Price", el("small",{},"pack")), el("th",{scope:"col"}, "৳/kg"),
+    ...NUTRIENTS.map(([k,l,u], i) => el("th",{scope:"col", class: i === 0 ? "gap" : ""}, l, el("small",{},`${u} ${per}`))))));
   const tb = el("tbody");
-  for (const [label, get, hi, f] of rows) {
-    const vals = its.map(get), ok = vals.filter(v => v != null);
-    const best = hi === null || !ok.length ? null : hi ? Math.max(...ok) : Math.min(...ok);
-    tb.append(el("tr",{}, el("td",{},label), ...vals.map(v => el("td",{class: best && v === best && its.length > 1 ? "best" : ""}, f(v)))));
+  for (const it of its) {
+    const cell = (k, v, f, extra="") => el("td",{class:`${extra}${best[k] != null && v === best[k] ? " best" : ""}`}, f(v));
+    tb.append(el("tr",{style:"cursor:default"},
+      el("td",{class:"c-cmp"}, el("button",{class:"rm", "aria-label":`Remove ${it.name}`, onclick:() => { state.cmp.delete(it.id); tray(); render(); compare(); }}, "×")),
+      el("td",{class:"c-item"}, el("div",{class:"iname"}, el("img",{src:it.image||"",alt:""}),
+        el("div",{}, el("b",{}, it.name), el("span",{class:"sub"}, it.category)))),
+      el("td",{class: best.price != null && it.price === best.price ? "best" : ""}, el("div",{class:"c-price"}, tk(it.price)), el("div",{class:"sub"}, it.pack)),
+      cell("perkg", it.price_per_kg, tk),
+      ...NUTRIENTS.map(([k], i) => cell(k, nutrient(it,k), fmt, i === 0 ? "gap" : ""))));
   }
   t.append(tb);
-  body.replaceChildren(el("h2",{},"Compare value for money"),
-    el("p",{class:"note",style:"margin-top:4px"},"Green marks the best value in each row: cheapest price, or most nutrient for every ৳100 spent."),
-    el("div",{class:"scroll",style:"margin-top:12px"},t));
-  $("#dlg").showModal();
+  const seg = el("div",{class:"seg", role:"group", "aria-label":"Show nutrients"},
+    ...[["100g","per 100 g"],["100tk","per ৳100 spent"]].map(([m,l]) => el("button",{"aria-pressed":String(state.mode === m),
+      onclick:() => { setMode(m); compare(); }}, l)));
+  body.replaceChildren(el("h2",{},`Compare ${its.length} item${its.length === 1 ? "" : "s"}`),
+    el("div",{class:"row", style:"margin-top:10px"}, el("span",{class:"seglabel"},"Nutrients"), seg),
+    el("p",{class:"note", style:"margin-top:8px"}, "Green marks the best in each column: the cheapest price, or the most of that nutrient. Fat and carbs aren't marked. Switch to “per ৳100 spent” to compare value for money."),
+    el("div",{class:"tablebox"}, t));
+  $("#dlg").classList.add("wide");
+  if (!$("#dlg").open) $("#dlg").showModal();
 }
 
 async function init(){
@@ -293,7 +320,6 @@ async function init(){
   for (const c of CATS) { const b = el("button",{class:"chip","aria-pressed":String(c===state.cat)}, c);
     b.onclick = () => { state.cat = c; document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render(); };
     $("#cats").append(b); }
-  const setMode = m => { state.mode = m; $("#m100g").setAttribute("aria-pressed", String(m === "100g")); $("#m100tk").setAttribute("aria-pressed", String(m === "100tk")); render(); };
   $("#m100g").onclick = () => setMode("100g");
   $("#m100tk").onclick = () => setMode("100tk");
   $("#q").oninput = e => { state.q = e.target.value; render(); };

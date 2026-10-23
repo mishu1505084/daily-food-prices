@@ -25,7 +25,7 @@ CSV columns: `date, category, name, pack, final_price_tk, price_per_kg_tk, in_st
 - Switch the nutrient columns between **per 100 g** and **per ৳100 spent**, and click any column heading to sort by it. The top 10% in each column is green.
 - Filter by category or search by name.
 - Tap an item to see its nutrients per 100 g, per pack and per ৳100, plus its price history.
-- Tick a few items and press **Compare** to see them side by side. The best value in each row is marked in green.
+- Tick a few items and press **Compare** to see just those items in the same table layout (per 100 g or per ৳100 spent). The best value in each column is green.
 
 ## How it works
 
