@@ -3,7 +3,7 @@
 Daily prices from [Shwapno](https://www.shwapno.com) for **fresh fruits, vegetables, fish, meat, poultry and eggs**, with a page to compare **nutrients per taka**.
 
 - Collected every day at **9:00 AM Bangladesh time** by a GitHub Action.
-- Only the **final price** is kept. If an item is on discount, the price shown is the discounted one.
+- Only the **final price** is kept: if Shwapno has a discount running, the saved price already includes it.
 - Each item is matched to reference nutrition values, so you can see things like "grams of protein per ৳100" or "cost per 100 g you actually eat".
 
 ## Where the data is
@@ -15,14 +15,15 @@ Daily prices from [Shwapno](https://www.shwapno.com) for **fresh fruits, vegetab
 | `data/latest.json` | Today's prices, used by the web page. |
 | `data/history.json` | Every item's price on every day, used for the price-history chart. |
 
-CSV columns: `date, category, name, pack, final_price_tk, price_per_kg_tk, on_discount, in_stock, cost_per_100g_edible_tk, protein_g_per_100tk, kcal_per_100tk, url`
+CSV columns: `date, category, name, pack, final_price_tk, price_per_kg_tk, in_stock, cost_per_100g_edible_tk, protein_g_per_100tk, kcal_per_100tk, url`
 
 ## The web page
 
-`index.html` is a small dashboard. Turn on GitHub Pages (Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`) and it is live at https://mishu1505084.github.io/daily-food-prices/.
+`index.html` is the **Kacha Bazaar** page. Turn on GitHub Pages (Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`) and it is live at https://mishu1505084.github.io/daily-food-prices/.
 
-- Filter by category, search, show only discounted items.
-- Sort by protein, calories, iron, calcium, fibre, vitamin A or vitamin C **per ৳100**, or by the cheapest price per 100 g edible or per kg.
+- A table of every item: price, price per kg, then all nine nutrients (protein, calories, fat, carbs, fibre, calcium, iron, vitamin A, vitamin C).
+- Switch the nutrient columns between **per 100 g** and **per ৳100 spent**, and click any column heading to sort by it. The top 10% in each column is green.
+- Filter by category or search by name.
 - Tap an item to see its nutrients per 100 g, per pack and per ৳100, plus its price history.
 - Tick a few items and press **Compare** to see them side by side. The best value in each row is marked in green.
 

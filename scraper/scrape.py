@@ -180,7 +180,6 @@ def scrape():
                 "category": categorise(label, is_parent, food),
                 "pack": pack,
                 "price": money(price),
-                "on_discount": bool(p["price"].get("discountAmountValue")),
                 "price_per_kg": money(per_kg),
                 "grams": grams,
                 "grams_estimated": estimated,
@@ -222,13 +221,13 @@ def write_outputs(now, items, foods):
                    "source": BASE, "items": items}, f, ensure_ascii=False, indent=1)
 
     cols = ["date", "category", "name", "pack", "final_price_tk", "price_per_kg_tk",
-            "on_discount", "in_stock", "cost_per_100g_edible_tk", "protein_g_per_100tk",
+            "in_stock", "cost_per_100g_edible_tk", "protein_g_per_100tk",
             "kcal_per_100tk", "url"]
     rows = []
     for i in items:
         cost, protein, kcal = value_columns(i, foods_by_key)
         rows.append([date, i["category"], i["name"], i["pack"], i["price"], i["price_per_kg"],
-                     "yes" if i["on_discount"] else "no", "yes" if i["in_stock"] else "no",
+                     "yes" if i["in_stock"] else "no",
                      cost, protein, kcal, i["url"]])
     for path in (os.path.join(DATA, "latest.csv"), os.path.join(DATA, "daily", f"{date}.csv")):
         with open(path, "w", newline="", encoding="utf-8-sig") as f:
@@ -252,8 +251,7 @@ def write_outputs(now, items, foods):
     by_cat = {}
     for i in items:
         by_cat[i["category"]] = by_cat.get(i["category"], 0) + 1
-    print(f"{date}: saved {len(items)} items", by_cat,
-          f"({sum(i['on_discount'] for i in items)} on discount)")
+    print(f"{date}: saved {len(items)} items", by_cat)
 
 
 if __name__ == "__main__":

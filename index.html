@@ -3,56 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shwapno Fresh Prices</title>
+<title>Kacha Bazaar</title>
 <meta name="description" content="Daily Shwapno prices for fruits, vegetables, fish, meat, poultry and eggs, with nutrients per taka.">
 <style>
 :root{
   --bg:#F4F6F3; --surface:#FFFFFF; --sunk:#E9EEE8; --ink:#16211B; --muted:#5E6E65; --line:#D9E1DA;
-  --accent:#1B7A4B; --accent-soft:#DCEFE3; --accent-ink:#FFFFFF; --deal:#B5480F; --deal-soft:#FBE5D6;
-  --bar:#2F9E63; --bar-bg:#E3EBE5; --shadow:0 12px 32px rgba(18,40,28,.16);
+  --accent:#1B7A4B; --accent-soft:#DCEFE3; --accent-ink:#FFFFFF;
+  --bar:#2F9E63; --shadow:0 12px 32px rgba(18,40,28,.16);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1411; --surface:#161E1A; --sunk:#1D2722; --ink:#E5EDE8; --muted:#93A59B; --line:#2A3630;
-  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F; --deal:#F2894B; --deal-soft:#3A2416;
-  --bar:#4CC58A; --bar-bg:#24312A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}}
+  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F;
+  --bar:#4CC58A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E1411; --surface:#161E1A; --sunk:#1D2722; --ink:#E5EDE8; --muted:#93A59B; --line:#2A3630;
-  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F; --deal:#F2894B; --deal-soft:#3A2416;
-  --bar:#4CC58A; --bar-bg:#24312A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}
+  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F;
+  --bar:#4CC58A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 120px}
-header h1{margin:0;font-size:24px;letter-spacing:-.01em}
+.wrap{max-width:1400px;margin:0 auto;padding:20px 16px 110px}
+header h1{margin:0;font-size:26px;letter-spacing:-.01em}
 header p{margin:4px 0 0;color:var(--muted);font-size:14px}
 .num{font-variant-numeric:tabular-nums}
-.controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-input[type=search],select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
-input[type=search]{flex:1 1 220px}
-select{flex:0 1 auto;max-width:100%}
+.controls{display:grid;gap:10px;padding:14px 0 10px}
+.row{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
+input[type=search]{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0;flex:1 1 240px}
 .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .chips::-webkit-scrollbar{display:none}
 .chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer}
 .chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--ink);padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
+.seglabel{font-size:14px;color:var(--muted)}
 label.tog{display:inline-flex;gap:6px;align-items:center;font-size:14px;color:var(--muted);cursor:pointer}
-.hint{font-size:13px;color:var(--muted);margin:10px 0 0}
-.list{margin-top:6px}
-.item{display:grid;grid-template-columns:28px 52px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-.item:hover{background:var(--sunk)}
-.item img{width:52px;height:42px;object-fit:cover;border-radius:8px;background:var(--sunk)}
-.item .name{font-weight:600;line-height:1.25}
-.item .sub{font-size:13px;color:var(--muted)}
-.item .price{text-align:right;white-space:nowrap}
-.item .price b{font-size:16px}
-.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:6px;background:var(--deal-soft);color:var(--deal);margin-left:4px;vertical-align:1px}
-.tag.out{background:var(--sunk);color:var(--muted)}
-.metric{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:13px}
-.bar{flex:0 1 160px;height:6px;border-radius:3px;background:var(--bar-bg);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--bar);border-radius:3px}
-.cmp{width:20px;height:20px;accent-color:var(--accent)}
+.hint{font-size:13px;color:var(--muted);margin:0 0 8px}
+
+/* Main table: scrolls both ways inside its box so the header row and item column stay in view. */
+.tablebox{overflow:auto;max-height:calc(100vh - 120px);border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+thead th{position:sticky;top:0;z-index:2;background:var(--surface);font-size:12px;font-weight:600;color:var(--muted);vertical-align:bottom;line-height:1.25}
+thead th small{display:block;font-weight:400}
+#grid th.sortable{cursor:pointer;user-select:none}
+#grid th.sortable:hover{color:var(--ink)}
+#grid th[aria-sort] {color:var(--accent)}
+#grid th[aria-sort=descending]::after{content:" ↓"}
+#grid th[aria-sort=ascending]::after{content:" ↑"}
+#grid .c-cmp{position:sticky;left:0;z-index:1;background:var(--surface);width:36px;padding-right:0;text-align:center}
+#grid .c-item{position:sticky;left:36px;z-index:1;background:var(--surface);text-align:left;white-space:normal;min-width:220px;max-width:300px;box-shadow:1px 0 0 var(--line)}
+#grid thead .c-cmp,#grid thead .c-item{z-index:3}
+#grid tbody tr{cursor:pointer}
+#grid tbody tr:hover td{background:var(--sunk)}
+#grid .c-price{font-weight:700;font-size:15px}
+#grid td.nut{color:var(--ink)}
+#grid td.top{color:var(--accent);font-weight:700}
+#grid .gap{border-left:1px solid var(--line)}
+.iname{display:flex;gap:10px;align-items:center}
+.iname img{width:40px;height:34px;object-fit:cover;border-radius:6px;background:var(--sunk);flex:none}
+.iname b{display:block;font-weight:600;line-height:1.25}
+.sub{font-size:12px;color:var(--muted)}
+.out{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:6px;background:var(--sunk);color:var(--muted);margin-left:4px}
+.cmp{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
 .empty{padding:40px 0;text-align:center;color:var(--muted)}
+
 .tray{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
 .tray[hidden]{display:none}
 .tray button{pointer-events:auto;font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 20px;background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow);cursor:pointer}
@@ -61,53 +77,53 @@ dialog{border:0;padding:0;background:var(--surface);color:var(--ink);border-radi
 dialog::backdrop{background:rgba(0,0,0,.45)}
 .dlg{padding:20px;overflow:auto;max-height:calc(100vh - 40px)}
 .dlg h2{margin:0 36px 2px 0;font-size:19px;line-height:1.25}
+.dlg th:first-child,.dlg td:first-child{text-align:left;white-space:normal}
+.dlg thead th{position:static}
 .x{position:absolute;top:10px;right:10px;font:inherit;font-size:22px;line-height:1;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px}
 .x:hover{background:var(--sunk)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:14px 0}
 .kpi{background:var(--sunk);border-radius:10px;padding:10px 12px}
 .kpi span{display:block;font-size:12px;color:var(--muted)}
 .kpi b{font-size:18px}
-table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th:first-child,td:first-child{text-align:left;white-space:normal}
-thead th{font-size:12px;color:var(--muted);font-weight:600;vertical-align:bottom}
 td.best{color:var(--accent);font-weight:700}
 .scroll{overflow-x:auto}
 .note{font-size:13px;color:var(--muted);margin:12px 0 0}
 a{color:var(--accent)}
 svg.spark{width:100%;height:90px;display:block;margin-top:6px}
-footer{margin-top:28px;font-size:13px;color:var(--muted)}
+footer{margin-top:24px;font-size:13px;color:var(--muted);max-width:900px}
 @media (max-width:560px){
-  .item{grid-template-columns:24px 44px 1fr;grid-template-areas:"c i n" "c i p"}
-  .item>.cmpcell{grid-area:c}.item>img{grid-area:i;width:44px;height:38px}.item>.info{grid-area:n}.item>.price{grid-area:p;text-align:left}
+  #grid .c-item{min-width:150px;max-width:170px}
+  .iname img{display:none}
+  .tablebox{max-height:calc(100vh - 80px)}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Shwapno Fresh Prices</h1>
+    <h1>Kacha Bazaar</h1>
     <p id="meta">Loading today's prices…</p>
   </header>
 
   <div class="controls">
-    <div class="row">
-      <input type="search" id="q" placeholder="Search e.g. rui, chicken, palong" aria-label="Search items">
-      <select id="metric" aria-label="Compare value by"></select>
-    </div>
+    <input type="search" id="q" placeholder="Search e.g. rui, chicken, palong" aria-label="Search items">
     <div class="chips" id="cats" role="group" aria-label="Category"></div>
     <div class="row">
-      <label class="tog"><input type="checkbox" id="deals"> On discount only</label>
+      <span class="seglabel">Nutrients</span>
+      <div class="seg" role="group" aria-label="Show nutrients">
+        <button id="m100g" aria-pressed="true">per 100 g</button><button id="m100tk" aria-pressed="false">per ৳100 spent</button>
+      </div>
       <label class="tog"><input type="checkbox" id="stock" checked> In stock only</label>
     </div>
   </div>
   <p class="hint" id="hint"></p>
-  <div class="list" id="list"></div>
+  <div class="tablebox"><table id="grid" class="num"><thead></thead><tbody></tbody></table></div>
 
   <footer>
-    Prices are Shwapno's online prices, after any discount, collected daily at 9 AM Bangladesh time.
-    Nutrients are typical reference values per 100 g of the edible part (USDA FoodData Central and the Bangladesh Food Composition Table), not Shwapno's labels.
-    "Edible" removes bones, heads, peel and seeds, so fish and meat with bone are compared fairly with boneless cuts.
+    Prices are Shwapno's online prices, collected daily at 9 AM Bangladesh time.
+    Nutrients are typical reference values for the edible part, raw (USDA FoodData Central and the Bangladesh Food Composition Table), not Shwapno's labels.
+    "Per ৳100 spent" removes bones, heads, peel and seeds first, so fish and meat with bone compare fairly with boneless cuts.
+    Click a column heading to sort, click an item for details, or tick items to compare them.
     Download: <a href="data/latest.csv">today's prices (CSV)</a> · <a href="data/history.json">price history (JSON)</a>. Older days are in the repo's <code>data/daily</code> folder.
   </footer>
 </div>
@@ -122,21 +138,8 @@ footer{margin-top:28px;font-size:13px;color:var(--muted)}
 const NUTRIENTS = [
   ["protein","Protein","g"],["kcal","Calories","kcal"],["fat","Fat","g"],["carbs","Carbs","g"],["fiber","Fibre","g"],
   ["calcium","Calcium","mg"],["iron","Iron","mg"],["vit_a","Vitamin A","µg"],["vit_c","Vitamin C","mg"]];
-const METRICS = [
-  {id:"protein", label:"Protein per ৳100", unit:"g", hi:true},
-  {id:"kcal", label:"Calories per ৳100", unit:"kcal", hi:true},
-  {id:"iron", label:"Iron per ৳100", unit:"mg", hi:true},
-  {id:"calcium", label:"Calcium per ৳100", unit:"mg", hi:true},
-  {id:"fiber", label:"Fibre per ৳100", unit:"g", hi:true},
-  {id:"vit_a", label:"Vitamin A per ৳100", unit:"µg", hi:true},
-  {id:"vit_c", label:"Vitamin C per ৳100", unit:"mg", hi:true},
-  {id:"cost100", label:"Cheapest per 100 g edible", unit:"৳", hi:false},
-  {id:"perkg", label:"Cheapest per kg", unit:"৳", hi:false},
-  {id:"price", label:"Lowest pack price", unit:"৳", hi:false},
-  {id:"name", label:"Name A–Z", unit:"", hi:false},
-];
 const CATS = ["All","Fruits","Vegetables","Fish","Meat","Poultry","Eggs"];
-const state = {cat:"All", q:"", metric:"protein", deals:false, stock:true, cmp:new Set()};
+const state = {cat:"All", q:"", mode:"100g", stock:true, sort:{key:"name", dir:1}, cmp:new Set()};
 let ITEMS = [], FOODS = {}, HISTORY = null, DATA = null;
 
 const $ = s => document.querySelector(s);
@@ -156,46 +159,61 @@ function enrich(it){
   if (it.gPerTk) for (const [k] of NUTRIENTS) it.per100tk[k] = f.n[k] * it.gPerTk;
   return it;
 }
-function metricValue(it, m){
-  if (m === "cost100") return it.cost100;
-  if (m === "perkg") return it.price_per_kg;
-  if (m === "price") return it.price;
-  if (m === "name") return null;
-  return it.per100tk[m] ?? null;
+const nutrient = (it, k) => state.mode === "100g" ? (it.f ? it.f.n[k] : null) : (it.per100tk[k] ?? null);
+function sortValue(it, key){
+  if (key === "name") return it.name.toLowerCase();
+  if (key === "price") return it.price;
+  if (key === "perkg") return it.price_per_kg;
+  return nutrient(it, key);
+}
+
+function header(){
+  const per = state.mode === "100g" ? "per 100 g" : "per ৳100";
+  const th = (key, label, sub, cls="") => {
+    const s = state.sort.key === key ? (state.sort.dir > 0 ? "ascending" : "descending") : null;
+    const h = el("th",{class:`sortable ${cls}`, scope:"col"}, label, sub ? el("small",{},sub) : null);
+    if (s) h.setAttribute("aria-sort", s);
+    // text sorts A→Z first, prices cheapest first, nutrients highest first
+    h.onclick = () => { state.sort = state.sort.key === key ? {key, dir:-state.sort.dir} : {key, dir: key === "name" || key === "price" || key === "perkg" ? 1 : -1}; render(); };
+    return h;
+  };
+  $("#grid thead").replaceChildren(el("tr",{},
+    el("th",{class:"c-cmp", scope:"col"}, el("span",{class:"sub"},"Cmp")),
+    th("name","Item","", "c-item"),
+    th("price","Price","pack", "c-price-h"),
+    th("perkg","৳/kg",""),
+    ...NUTRIENTS.map(([k,l,u], i) => th(k, l, `${u} ${per}`, i === 0 ? "gap" : ""))));
 }
 
 function render(){
-  const m = METRICS.find(x => x.id === state.metric);
+  header();
   const q = state.q.trim().toLowerCase();
-  let rows = ITEMS.filter(it =>
-    (state.cat === "All" || it.category === state.cat) &&
-    (!state.deals || it.on_discount) && (!state.stock || it.in_stock) &&
+  const rows = ITEMS.filter(it =>
+    (state.cat === "All" || it.category === state.cat) && (!state.stock || it.in_stock) &&
     (!q || it.name.toLowerCase().includes(q) || (it.f && it.f.label.toLowerCase().includes(q))));
-  if (m.id === "name") rows.sort((a,b) => a.name.localeCompare(b.name));
-  else rows.sort((a,b) => { const va = metricValue(a,m.id), vb = metricValue(b,m.id);
-    if (va == null) return 1; if (vb == null) return -1; return m.hi ? vb - va : va - vb; });
-  const vals = rows.map(r => metricValue(r, m.id)).filter(v => v != null);
-  const max = Math.max(...vals, 0), min = Math.min(...vals);
-  $("#hint").textContent = `${rows.length} item${rows.length === 1 ? "" : "s"}` + (m.id === "name" ? "" :
-    m.hi ? ` · sorted by ${m.label.toLowerCase()}, best value first` : ` · ${m.label.toLowerCase()} first`);
-  const list = $("#list"); list.replaceChildren();
-  if (!rows.length) { list.append(el("div",{class:"empty"},"No items match.")); return; }
+  const {key, dir} = state.sort;
+  rows.sort((a,b) => { const va = sortValue(a,key), vb = sortValue(b,key);
+    if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
+    return (va < vb ? -1 : va > vb ? 1 : 0) * dir; });
+  // highlight the top 10% in each nutrient column within the current view
+  const tops = {};
+  for (const [k] of NUTRIENTS) { const v = rows.map(r => nutrient(r,k)).filter(x => x).sort((a,b) => b - a);
+    tops[k] = v.length >= 5 ? v[Math.max(0, Math.ceil(v.length * 0.1) - 1)] : Infinity; }
+  $("#hint").textContent = `${rows.length} item${rows.length === 1 ? "" : "s"} · nutrients ${state.mode === "100g" ? "per 100 g of the edible part" : "you get for every ৳100 spent"} · green = top 10% in that column`;
+  const tb = $("#grid tbody"); tb.replaceChildren();
+  if (!rows.length) { tb.append(el("tr",{}, el("td",{colspan:String(4 + NUTRIENTS.length), class:"empty"},"No items match."))); return; }
   for (const it of rows) {
-    const v = metricValue(it, m.id);
-    const pct = v == null || !max ? 0 : m.hi ? v / max * 100 : (min / v) * 100;
-    const cb = el("input",{type:"checkbox",class:"cmp","aria-label":"Add to compare"});
+    const cb = el("input",{type:"checkbox",class:"cmp","aria-label":`Compare ${it.name}`});
     cb.checked = state.cmp.has(it.id);
     cb.onclick = e => { e.stopPropagation(); cb.checked ? state.cmp.add(it.id) : state.cmp.delete(it.id); tray(); };
-    const sub = el("div",{class:"sub"}, `${it.category} · ${it.pack}` + (it.price_per_kg && !/^1 kg$/.test(it.pack) ? ` · ${tk(it.price_per_kg)}/kg` : ""));
-    const metric = m.id === "name" || m.id === "price" || m.id === "perkg" ? null :
-      el("div",{class:"metric num"}, el("span",{class:"bar"}, el("i",{style:`width:${pct.toFixed(1)}%`})),
-        v == null ? "no data" : m.id === "cost100" ? `${tk(v)} per 100 g edible` : `${fmt(v)} ${m.unit} per ৳100`);
-    const tags = [it.on_discount ? el("span",{class:"tag"},"Discount") : null, !it.in_stock ? el("span",{class:"tag out"},"Out of stock") : null];
-    list.append(el("div",{class:"item",onclick:()=>detail(it)},
-      el("div",{class:"cmpcell"},cb),
-      el("img",{src:it.image||"",alt:"",loading:"lazy"}),
-      el("div",{class:"info"}, el("div",{class:"name"}, it.name, ...tags), sub, metric),
-      el("div",{class:"price num"}, el("b",{},tk(it.price)), el("div",{class:"sub"}, it.pack))));
+    tb.append(el("tr",{onclick:()=>detail(it)},
+      el("td",{class:"c-cmp", onclick:e => e.stopPropagation()}, cb),
+      el("td",{class:"c-item"}, el("div",{class:"iname"}, el("img",{src:it.image||"",alt:"",loading:"lazy"}),
+        el("div",{}, el("b",{}, it.name, !it.in_stock ? el("span",{class:"out"},"Out of stock") : null), el("span",{class:"sub"}, it.category)))),
+      el("td",{}, el("div",{class:"c-price"}, tk(it.price)), el("div",{class:"sub"}, it.pack)),
+      el("td",{}, tk(it.price_per_kg)),
+      ...NUTRIENTS.map(([k], i) => { const v = nutrient(it,k);
+        return el("td",{class:`nut${i === 0 ? " gap" : ""}${v && v >= tops[k] ? " top" : ""}`}, fmt(v)); })));
   }
 }
 
@@ -207,7 +225,7 @@ async function detail(it){
   const kp = (label, value) => el("div",{class:"kpi"}, el("span",{},label), el("b",{class:"num"},value));
   body.replaceChildren(
     el("h2",{}, it.name),
-    el("div",{class:"sub"}, `${it.category} · ${it.pack}` + (it.on_discount ? " · discounted price" : "")),
+    el("div",{class:"sub"}, `${it.category} · ${it.pack}`),
     el("div",{class:"kpis"},
       kp("Price", tk(it.price)), kp("Per kg", tk(it.price_per_kg)),
       kp("Per 100 g edible", tk(it.cost100)), kp("Edible part", f ? Math.round(f.edible*100) + "%" : "–")));
@@ -271,17 +289,14 @@ async function init(){
     ITEMS = d.items.map(enrich);
   } catch (e) { $("#meta").textContent = "Couldn't load price data. If you opened this file directly, serve it over http (e.g. GitHub Pages)."; return; }
   const when = new Date(DATA.updated);
-  const deals = ITEMS.filter(i => i.on_discount).length;
-  $("#meta").textContent = `${ITEMS.length} items · ${deals} on discount · updated ${when.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",timeZone:"Asia/Dhaka"})} (Dhaka)`;
-  const sel = $("#metric");
-  for (const m of METRICS) sel.append(el("option",{value:m.id},m.label));
-  sel.value = state.metric;
-  sel.onchange = () => { state.metric = sel.value; render(); };
+  $("#meta").textContent = `Shwapno prices for ${ITEMS.length} fresh items · updated ${when.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",timeZone:"Asia/Dhaka"})} (Dhaka)`;
   for (const c of CATS) { const b = el("button",{class:"chip","aria-pressed":String(c===state.cat)}, c);
     b.onclick = () => { state.cat = c; document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render(); };
     $("#cats").append(b); }
+  const setMode = m => { state.mode = m; $("#m100g").setAttribute("aria-pressed", String(m === "100g")); $("#m100tk").setAttribute("aria-pressed", String(m === "100tk")); render(); };
+  $("#m100g").onclick = () => setMode("100g");
+  $("#m100tk").onclick = () => setMode("100tk");
   $("#q").oninput = e => { state.q = e.target.value; render(); };
-  $("#deals").onchange = e => { state.deals = e.target.checked; render(); };
   $("#stock").onchange = e => { state.stock = e.target.checked; render(); };
   $("#openCmp").onclick = compare;
   $("#clearCmp").onclick = () => { state.cmp.clear(); tray(); render(); };
