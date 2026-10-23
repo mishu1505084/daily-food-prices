@@ -144,7 +144,7 @@ const NUTRIENTS = [
   ["protein","Protein","g"],["kcal","Calories","kcal"],["fat","Fat","g"],["carbs","Carbs","g"],["fiber","Fibre","g"],
   ["calcium","Calcium","mg"],["iron","Iron","mg"],["vit_a","Vitamin A","µg"],["vit_c","Vitamin C","mg"]];
 const CATS = ["All","Fruits","Vegetables","Fish","Meat","Poultry","Eggs"];
-const state = {cat:"All", q:"", mode:"100g", stock:true, sort:{key:"name", dir:1}, cmp:new Set()};
+const state = {cat:"All", q:"", mode:"100g", stock:true, sort:{key:"name", dir:1}, cmpSort:{key:null, dir:1}, cmp:new Set()};
 let ITEMS = [], FOODS = {}, HISTORY = null, DATA = null;
 
 const $ = s => document.querySelector(s);
@@ -172,16 +172,25 @@ function sortValue(it, key){
   return nutrient(it, key);
 }
 
+// A clickable column heading that sorts by `key`, used by both the main and compare tables.
+function sortTh(sort, onChange, key, label, sub, cls=""){
+  const h = el("th",{class:`sortable ${cls}`, scope:"col"}, label, sub ? el("small",{},sub) : null);
+  if (sort.key === key) h.setAttribute("aria-sort", sort.dir > 0 ? "ascending" : "descending");
+  // text sorts A→Z first, prices cheapest first, nutrients highest first
+  h.onclick = () => { if (sort.key === key) sort.dir = -sort.dir;
+    else { sort.key = key; sort.dir = key === "name" || key === "price" || key === "perkg" ? 1 : -1; } onChange(); };
+  return h;
+}
+function sortRows(rows, {key, dir}){
+  if (!key) return rows;
+  return rows.sort((a,b) => { const va = sortValue(a,key), vb = sortValue(b,key);
+    if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
+    return (va < vb ? -1 : va > vb ? 1 : 0) * dir; });
+}
+
 function header(){
   const per = state.mode === "100g" ? "per 100 g" : "per ৳100";
-  const th = (key, label, sub, cls="") => {
-    const s = state.sort.key === key ? (state.sort.dir > 0 ? "ascending" : "descending") : null;
-    const h = el("th",{class:`sortable ${cls}`, scope:"col"}, label, sub ? el("small",{},sub) : null);
-    if (s) h.setAttribute("aria-sort", s);
-    // text sorts A→Z first, prices cheapest first, nutrients highest first
-    h.onclick = () => { state.sort = state.sort.key === key ? {key, dir:-state.sort.dir} : {key, dir: key === "name" || key === "price" || key === "perkg" ? 1 : -1}; render(); };
-    return h;
-  };
+  const th = (...a) => sortTh(state.sort, render, ...a);
   $("#grid thead").replaceChildren(el("tr",{},
     el("th",{class:"c-cmp", scope:"col"}, el("span",{class:"sub"},"Cmp")),
     th("name","Item","", "c-item"),
@@ -196,10 +205,7 @@ function render(){
   const rows = ITEMS.filter(it =>
     (state.cat === "All" || it.category === state.cat) && (!state.stock || it.in_stock) &&
     (!q || it.name.toLowerCase().includes(q) || (it.f && it.f.label.toLowerCase().includes(q))));
-  const {key, dir} = state.sort;
-  rows.sort((a,b) => { const va = sortValue(a,key), vb = sortValue(b,key);
-    if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
-    return (va < vb ? -1 : va > vb ? 1 : 0) * dir; });
+  sortRows(rows, state.sort);
   // highlight the top 10% in each nutrient column within the current view
   const tops = {};
   for (const [k] of NUTRIENTS) { const v = rows.map(r => nutrient(r,k)).filter(x => x).sort((a,b) => b - a);
@@ -272,9 +278,10 @@ function spark(pts){
 
 // Same columns as the main table, one row per ticked item; the best value in each column is green.
 function compare(){
-  const its = ITEMS.filter(i => state.cmp.has(i.id)), body = $("#dlgBody");
+  const its = sortRows(ITEMS.filter(i => state.cmp.has(i.id)), state.cmpSort), body = $("#dlgBody");
   if (!its.length) { $("#dlg").close(); return; }
   const per = state.mode === "100g" ? "per 100 g" : "per ৳100";
+  const th = (...a) => sortTh(state.cmpSort, compare, ...a);
   // cheapest wins for prices, most wins for nutrients; fat and carbs aren't "more is better", so never marked
   const cols = [["price", i => i.price, -1, tk], ["perkg", i => i.price_per_kg, -1, tk],
     ...NUTRIENTS.map(([k]) => [k, i => nutrient(i,k), k === "fat" || k === "carbs" ? 0 : 1, fmt])];
@@ -282,9 +289,9 @@ function compare(){
   for (const [k, get, dir] of cols) { const v = its.map(get).filter(x => x);
     best[k] = dir && v.length > 1 ? (dir > 0 ? Math.max(...v) : Math.min(...v)) : null; }
   const t = el("table",{class:"grid num"}, el("thead",{}, el("tr",{},
-    el("th",{class:"c-cmp", scope:"col"}, ""), el("th",{class:"c-item", scope:"col"}, "Item"),
-    el("th",{scope:"col"}, "Price", el("small",{},"pack")), el("th",{scope:"col"}, "৳/kg"),
-    ...NUTRIENTS.map(([k,l,u], i) => el("th",{scope:"col", class: i === 0 ? "gap" : ""}, l, el("small",{},`${u} ${per}`))))));
+    el("th",{class:"c-cmp", scope:"col"}, ""), th("name","Item","","c-item"),
+    th("price","Price","pack"), th("perkg","৳/kg",""),
+    ...NUTRIENTS.map(([k,l,u], i) => th(k, l, `${u} ${per}`, i === 0 ? "gap" : "")))));
   const tb = el("tbody");
   for (const it of its) {
     const cell = (k, v, f, extra="") => el("td",{class:`${extra}${best[k] != null && v === best[k] ? " best" : ""}`}, f(v));
@@ -302,7 +309,7 @@ function compare(){
       onclick:() => { setMode(m); compare(); }}, l)));
   body.replaceChildren(el("h2",{},`Compare ${its.length} item${its.length === 1 ? "" : "s"}`),
     el("div",{class:"row", style:"margin-top:10px"}, el("span",{class:"seglabel"},"Nutrients"), seg),
-    el("p",{class:"note", style:"margin-top:8px"}, "Green marks the best in each column: the cheapest price, or the most of that nutrient. Fat and carbs aren't marked. Switch to “per ৳100 spent” to compare value for money."),
+    el("p",{class:"note", style:"margin-top:8px"}, "Green marks the best in each column: the cheapest price, or the most of that nutrient. Fat and carbs aren't marked. Click a column heading to sort. Switch to “per ৳100 spent” to compare value for money."),
     el("div",{class:"tablebox"}, t));
   $("#dlg").classList.add("wide");
   if (!$("#dlg").open) $("#dlg").showModal();
