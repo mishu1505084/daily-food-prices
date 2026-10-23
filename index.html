@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shwapno Fresh Prices</title>
+<meta name="description" content="Daily Shwapno prices for fruits, vegetables, fish, meat, poultry and eggs, with nutrients per taka.">
+<style>
+:root{
+  --bg:#F4F6F3; --surface:#FFFFFF; --sunk:#E9EEE8; --ink:#16211B; --muted:#5E6E65; --line:#D9E1DA;
+  --accent:#1B7A4B; --accent-soft:#DCEFE3; --accent-ink:#FFFFFF; --deal:#B5480F; --deal-soft:#FBE5D6;
+  --bar:#2F9E63; --bar-bg:#E3EBE5; --shadow:0 12px 32px rgba(18,40,28,.16);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1411; --surface:#161E1A; --sunk:#1D2722; --ink:#E5EDE8; --muted:#93A59B; --line:#2A3630;
+  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F; --deal:#F2894B; --deal-soft:#3A2416;
+  --bar:#4CC58A; --bar-bg:#24312A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1411; --surface:#161E1A; --sunk:#1D2722; --ink:#E5EDE8; --muted:#93A59B; --line:#2A3630;
+  --accent:#4CC58A; --accent-soft:#183427; --accent-ink:#06210F; --deal:#F2894B; --deal-soft:#3A2416;
+  --bar:#4CC58A; --bar-bg:#24312A; --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 120px}
+header h1{margin:0;font-size:24px;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.num{font-variant-numeric:tabular-nums}
+.controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=search],select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
+input[type=search]{flex:1 1 220px}
+select{flex:0 1 auto;max-width:100%}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+label.tog{display:inline-flex;gap:6px;align-items:center;font-size:14px;color:var(--muted);cursor:pointer}
+.hint{font-size:13px;color:var(--muted);margin:10px 0 0}
+.list{margin-top:6px}
+.item{display:grid;grid-template-columns:28px 52px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.item:hover{background:var(--sunk)}
+.item img{width:52px;height:42px;object-fit:cover;border-radius:8px;background:var(--sunk)}
+.item .name{font-weight:600;line-height:1.25}
+.item .sub{font-size:13px;color:var(--muted)}
+.item .price{text-align:right;white-space:nowrap}
+.item .price b{font-size:16px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:6px;background:var(--deal-soft);color:var(--deal);margin-left:4px;vertical-align:1px}
+.tag.out{background:var(--sunk);color:var(--muted)}
+.metric{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:13px}
+.bar{flex:0 1 160px;height:6px;border-radius:3px;background:var(--bar-bg);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);border-radius:3px}
+.cmp{width:20px;height:20px;accent-color:var(--accent)}
+.empty{padding:40px 0;text-align:center;color:var(--muted)}
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.tray[hidden]{display:none}
+.tray button{pointer-events:auto;font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 20px;background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow);cursor:pointer}
+.tray .clear{background:var(--surface);color:var(--ink);margin-left:8px}
+dialog{border:0;padding:0;background:var(--surface);color:var(--ink);border-radius:16px;box-shadow:var(--shadow);width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg{padding:20px;overflow:auto;max-height:calc(100vh - 40px)}
+.dlg h2{margin:0 36px 2px 0;font-size:19px;line-height:1.25}
+.x{position:absolute;top:10px;right:10px;font:inherit;font-size:22px;line-height:1;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px}
+.x:hover{background:var(--sunk)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:14px 0}
+.kpi{background:var(--sunk);border-radius:10px;padding:10px 12px}
+.kpi span{display:block;font-size:12px;color:var(--muted)}
+.kpi b{font-size:18px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+thead th{font-size:12px;color:var(--muted);font-weight:600;vertical-align:bottom}
+td.best{color:var(--accent);font-weight:700}
+.scroll{overflow-x:auto}
+.note{font-size:13px;color:var(--muted);margin:12px 0 0}
+a{color:var(--accent)}
+svg.spark{width:100%;height:90px;display:block;margin-top:6px}
+footer{margin-top:28px;font-size:13px;color:var(--muted)}
+@media (max-width:560px){
+  .item{grid-template-columns:24px 44px 1fr;grid-template-areas:"c i n" "c i p"}
+  .item>.cmpcell{grid-area:c}.item>img{grid-area:i;width:44px;height:38px}.item>.info{grid-area:n}.item>.price{grid-area:p;text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Shwapno Fresh Prices</h1>
+    <p id="meta">Loading today's prices…</p>
+  </header>
+
+  <div class="controls">
+    <div class="row">
+      <input type="search" id="q" placeholder="Search e.g. rui, chicken, palong" aria-label="Search items">
+      <select id="metric" aria-label="Compare value by"></select>
+    </div>
+    <div class="chips" id="cats" role="group" aria-label="Category"></div>
+    <div class="row">
+      <label class="tog"><input type="checkbox" id="deals"> On discount only</label>
+      <label class="tog"><input type="checkbox" id="stock" checked> In stock only</label>
+    </div>
+  </div>
+  <p class="hint" id="hint"></p>
+  <div class="list" id="list"></div>
+
+  <footer>
+    Prices are Shwapno's online prices, after any discount, collected daily at 9 AM Bangladesh time.
+    Nutrients are typical reference values per 100 g of the edible part (USDA FoodData Central and the Bangladesh Food Composition Table), not Shwapno's labels.
+    "Edible" removes bones, heads, peel and seeds, so fish and meat with bone are compared fairly with boneless cuts.
+    Download: <a href="data/latest.csv">today's prices (CSV)</a> · <a href="data/history.json">price history (JSON)</a>. Older days are in the repo's <code>data/daily</code> folder.
+  </footer>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <button id="openCmp">Compare</button><button class="clear" id="clearCmp">Clear</button>
+</div>
+
+<dialog id="dlg"><button class="x" aria-label="Close" onclick="this.closest('dialog').close()">×</button><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+const NUTRIENTS = [
+  ["protein","Protein","g"],["kcal","Calories","kcal"],["fat","Fat","g"],["carbs","Carbs","g"],["fiber","Fibre","g"],
+  ["calcium","Calcium","mg"],["iron","Iron","mg"],["vit_a","Vitamin A","µg"],["vit_c","Vitamin C","mg"]];
+const METRICS = [
+  {id:"protein", label:"Protein per ৳100", unit:"g", hi:true},
+  {id:"kcal", label:"Calories per ৳100", unit:"kcal", hi:true},
+  {id:"iron", label:"Iron per ৳100", unit:"mg", hi:true},
+  {id:"calcium", label:"Calcium per ৳100", unit:"mg", hi:true},
+  {id:"fiber", label:"Fibre per ৳100", unit:"g", hi:true},
+  {id:"vit_a", label:"Vitamin A per ৳100", unit:"µg", hi:true},
+  {id:"vit_c", label:"Vitamin C per ৳100", unit:"mg", hi:true},
+  {id:"cost100", label:"Cheapest per 100 g edible", unit:"৳", hi:false},
+  {id:"perkg", label:"Cheapest per kg", unit:"৳", hi:false},
+  {id:"price", label:"Lowest pack price", unit:"৳", hi:false},
+  {id:"name", label:"Name A–Z", unit:"", hi:false},
+];
+const CATS = ["All","Fruits","Vegetables","Fish","Meat","Poultry","Eggs"];
+const state = {cat:"All", q:"", metric:"protein", deals:false, stock:true, cmp:new Set()};
+let ITEMS = [], FOODS = {}, HISTORY = null, DATA = null;
+
+const $ = s => document.querySelector(s);
+const tk = v => v == null ? "–" : "৳" + (v >= 100 ? Math.round(v).toLocaleString("en-IN") : (+v.toFixed(2)).toString());
+const fmt = v => v == null ? "–" : v >= 100 ? Math.round(v).toLocaleString("en-IN") : v >= 10 ? v.toFixed(1).replace(/\.0$/,"") : (+v.toFixed(2)).toString();
+const el = (tag, attrs={}, ...kids) => { const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) k === "class" ? e.className = v : k.startsWith("on") ? e[k] = v : e.setAttribute(k, v);
+  for (const k of kids) if (k != null) e.append(k); return e; };
+
+// grams you actually eat per taka spent; everything "per ৳100" builds on it
+function enrich(it){
+  const f = FOODS[it.food];
+  it.f = f;
+  it.gPerTk = f && it.price_per_kg ? 1000 * f.edible / it.price_per_kg : null;
+  it.cost100 = it.gPerTk ? 100 / it.gPerTk : null;
+  it.per100tk = {};
+  if (it.gPerTk) for (const [k] of NUTRIENTS) it.per100tk[k] = f.n[k] * it.gPerTk;
+  return it;
+}
+function metricValue(it, m){
+  if (m === "cost100") return it.cost100;
+  if (m === "perkg") return it.price_per_kg;
+  if (m === "price") return it.price;
+  if (m === "name") return null;
+  return it.per100tk[m] ?? null;
+}
+
+function render(){
+  const m = METRICS.find(x => x.id === state.metric);
+  const q = state.q.trim().toLowerCase();
+  let rows = ITEMS.filter(it =>
+    (state.cat === "All" || it.category === state.cat) &&
+    (!state.deals || it.on_discount) && (!state.stock || it.in_stock) &&
+    (!q || it.name.toLowerCase().includes(q) || (it.f && it.f.label.toLowerCase().includes(q))));
+  if (m.id === "name") rows.sort((a,b) => a.name.localeCompare(b.name));
+  else rows.sort((a,b) => { const va = metricValue(a,m.id), vb = metricValue(b,m.id);
+    if (va == null) return 1; if (vb == null) return -1; return m.hi ? vb - va : va - vb; });
+  const vals = rows.map(r => metricValue(r, m.id)).filter(v => v != null);
+  const max = Math.max(...vals, 0), min = Math.min(...vals);
+  $("#hint").textContent = `${rows.length} item${rows.length === 1 ? "" : "s"}` + (m.id === "name" ? "" :
+    m.hi ? ` · sorted by ${m.label.toLowerCase()}, best value first` : ` · ${m.label.toLowerCase()} first`);
+  const list = $("#list"); list.replaceChildren();
+  if (!rows.length) { list.append(el("div",{class:"empty"},"No items match.")); return; }
+  for (const it of rows) {
+    const v = metricValue(it, m.id);
+    const pct = v == null || !max ? 0 : m.hi ? v / max * 100 : (min / v) * 100;
+    const cb = el("input",{type:"checkbox",class:"cmp","aria-label":"Add to compare"});
+    cb.checked = state.cmp.has(it.id);
+    cb.onclick = e => { e.stopPropagation(); cb.checked ? state.cmp.add(it.id) : state.cmp.delete(it.id); tray(); };
+    const sub = el("div",{class:"sub"}, `${it.category} · ${it.pack}` + (it.price_per_kg && !/^1 kg$/.test(it.pack) ? ` · ${tk(it.price_per_kg)}/kg` : ""));
+    const metric = m.id === "name" || m.id === "price" || m.id === "perkg" ? null :
+      el("div",{class:"metric num"}, el("span",{class:"bar"}, el("i",{style:`width:${pct.toFixed(1)}%`})),
+        v == null ? "no data" : m.id === "cost100" ? `${tk(v)} per 100 g edible` : `${fmt(v)} ${m.unit} per ৳100`);
+    const tags = [it.on_discount ? el("span",{class:"tag"},"Discount") : null, !it.in_stock ? el("span",{class:"tag out"},"Out of stock") : null];
+    list.append(el("div",{class:"item",onclick:()=>detail(it)},
+      el("div",{class:"cmpcell"},cb),
+      el("img",{src:it.image||"",alt:"",loading:"lazy"}),
+      el("div",{class:"info"}, el("div",{class:"name"}, it.name, ...tags), sub, metric),
+      el("div",{class:"price num"}, el("b",{},tk(it.price)), el("div",{class:"sub"}, it.pack))));
+  }
+}
+
+function tray(){ const n = state.cmp.size; $("#tray").hidden = n === 0; $("#openCmp").textContent = `Compare ${n} item${n===1?"":"s"}`; }
+
+async function detail(it){
+  const f = it.f, body = $("#dlgBody");
+  const packG = it.grams && f ? it.grams * f.edible : null;
+  const kp = (label, value) => el("div",{class:"kpi"}, el("span",{},label), el("b",{class:"num"},value));
+  body.replaceChildren(
+    el("h2",{}, it.name),
+    el("div",{class:"sub"}, `${it.category} · ${it.pack}` + (it.on_discount ? " · discounted price" : "")),
+    el("div",{class:"kpis"},
+      kp("Price", tk(it.price)), kp("Per kg", tk(it.price_per_kg)),
+      kp("Per 100 g edible", tk(it.cost100)), kp("Edible part", f ? Math.round(f.edible*100) + "%" : "–")));
+  if (f) {
+    const t = el("table",{class:"num"}, el("thead",{}, el("tr",{}, el("th",{},"Nutrient"), el("th",{},"Per 100 g"),
+      el("th",{}, packG ? `Per pack (${Math.round(packG)} g edible)` : "Per pack"), el("th",{},"Per ৳100"))));
+    const tb = el("tbody");
+    for (const [k,label,u] of NUTRIENTS) tb.append(el("tr",{}, el("td",{},`${label} (${u})`), el("td",{},fmt(f.n[k])),
+      el("td",{}, packG ? fmt(f.n[k]*packG/100) : "–"), el("td",{}, fmt(it.per100tk[k]))));
+    t.append(tb);
+    body.append(el("div",{class:"scroll"},t),
+      el("p",{class:"note"}, `Nutrition reference: ${f.label}, raw.` + (it.grams_estimated && it.grams ? ` Weight per pack is an estimate (${Math.round(it.grams)} g), since Shwapno sells this by the piece.` : "")));
+  } else body.append(el("p",{class:"note"},"No nutrition data matched for this item yet."));
+  const hist = el("div"); body.append(el("h3",{style:"font-size:15px;margin:18px 0 0"},"Price history"), hist,
+    el("p",{class:"note"}, el("a",{href:it.url,target:"_blank",rel:"noopener"},"Open on Shwapno ↗")));
+  $("#dlg").showModal();
+  try {
+    HISTORY = HISTORY || await (await fetch("data/history.json",{cache:"no-cache"})).json();
+    const pts = (HISTORY[it.id]?.prices || []).map(p => ({d:p[0], v:p[1]}));
+    hist.append(pts.length < 2 ? el("p",{class:"note"},`Only ${pts.length} day of data so far — the chart fills in as the daily scraper runs.`) : spark(pts));
+  } catch { hist.append(el("p",{class:"note"},"History not available.")); }
+}
+
+function spark(pts){
+  const W = 640, H = 90, P = 6, vs = pts.map(p => p.v), lo = Math.min(...vs), hi = Math.max(...vs), span = hi - lo || 1;
+  const x = i => P + i * (W - 2*P) / (pts.length - 1), y = v => H - P - (v - lo) / span * (H - 2*P - 14);
+  const d = pts.map((p,i) => `${i?"L":"M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns,"svg");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("class","spark"); svg.setAttribute("role","img");
+  svg.setAttribute("aria-label",`Price from ${tk(pts[0].v)} on ${pts[0].d} to ${tk(vs.at(-1))} on ${pts.at(-1).d}`);
+  svg.innerHTML = `<path d="${d}" fill="none" stroke="var(--bar)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(pts.length-1)}" cy="${y(vs.at(-1))}" r="4" fill="var(--bar)"/>
+    <text x="${P}" y="12" font-size="12" fill="var(--muted)">${pts[0].d} · low ${tk(lo)} · high ${tk(hi)} · today ${tk(vs.at(-1))}</text>`;
+  return svg;
+}
+
+function compare(){
+  const its = ITEMS.filter(i => state.cmp.has(i.id)), body = $("#dlgBody");
+  const rows = [["Price", i => i.price, false, tk], ["Per kg", i => i.price_per_kg, false, tk], ["Per 100 g edible", i => i.cost100, false, tk],
+    // fat and carbs aren't "more is better", so they're shown but never marked best
+    ...NUTRIENTS.map(([k,l,u]) => [`${l} per ৳100 (${u})`, i => i.per100tk[k], k === "fat" || k === "carbs" ? null : true, fmt])];
+  const t = el("table",{class:"num"}, el("thead",{}, el("tr",{}, el("th",{},""), ...its.map(i => el("th",{style:"white-space:normal;min-width:110px"}, i.name)))));
+  const tb = el("tbody");
+  for (const [label, get, hi, f] of rows) {
+    const vals = its.map(get), ok = vals.filter(v => v != null);
+    const best = hi === null || !ok.length ? null : hi ? Math.max(...ok) : Math.min(...ok);
+    tb.append(el("tr",{}, el("td",{},label), ...vals.map(v => el("td",{class: best && v === best && its.length > 1 ? "best" : ""}, f(v)))));
+  }
+  t.append(tb);
+  body.replaceChildren(el("h2",{},"Compare value for money"),
+    el("p",{class:"note",style:"margin-top:4px"},"Green marks the best value in each row: cheapest price, or most nutrient for every ৳100 spent."),
+    el("div",{class:"scroll",style:"margin-top:12px"},t));
+  $("#dlg").showModal();
+}
+
+async function init(){
+  try {
+    const [d, n] = await Promise.all([fetch("data/latest.json",{cache:"no-cache"}).then(r => r.json()),
+                                      fetch("scraper/nutrition.json",{cache:"no-cache"}).then(r => r.json())]);
+    DATA = d; for (const f of n.foods) FOODS[f.key] = f;
+    ITEMS = d.items.map(enrich);
+  } catch (e) { $("#meta").textContent = "Couldn't load price data. If you opened this file directly, serve it over http (e.g. GitHub Pages)."; return; }
+  const when = new Date(DATA.updated);
+  const deals = ITEMS.filter(i => i.on_discount).length;
+  $("#meta").textContent = `${ITEMS.length} items · ${deals} on discount · updated ${when.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",timeZone:"Asia/Dhaka"})} (Dhaka)`;
+  const sel = $("#metric");
+  for (const m of METRICS) sel.append(el("option",{value:m.id},m.label));
+  sel.value = state.metric;
+  sel.onchange = () => { state.metric = sel.value; render(); };
+  for (const c of CATS) { const b = el("button",{class:"chip","aria-pressed":String(c===state.cat)}, c);
+    b.onclick = () => { state.cat = c; document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render(); };
+    $("#cats").append(b); }
+  $("#q").oninput = e => { state.q = e.target.value; render(); };
+  $("#deals").onchange = e => { state.deals = e.target.checked; render(); };
+  $("#stock").onchange = e => { state.stock = e.target.checked; render(); };
+  $("#openCmp").onclick = compare;
+  $("#clearCmp").onclick = () => { state.cmp.clear(); tray(); render(); };
+  render();
+}
+init();
+</script>
+</body>
+</html>
