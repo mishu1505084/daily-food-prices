@@ -1,6 +1,6 @@
 {
- "date": "2026-10-27",
- "updated": "2026-10-27T09:20:41+06:00",
+ "date": "2026-10-28",
+ "updated": "2026-10-28T09:29:16+06:00",
  "source": "https://www.shwapno.com",
  "items": [
   {
@@ -49,6 +49,21 @@
    "image": "https://d2t8nl1y0ie1km.cloudfront.net/images/thumbs/66377497211595380a8f1b85_KFK-Branded-Egg-12-Pcs-Pack_1.webp"
   },
   {
+   "id": "6637664e694b3e503625eff0",
+   "sku": "3101788",
+   "name": "Paragon Brown Egg 12Pcs (12Pcs Pack)",
+   "category": "Eggs",
+   "pack": "12 pcs",
+   "price": 205,
+   "price_per_kg": 310.61,
+   "grams": 660,
+   "grams_estimated": true,
+   "in_stock": true,
+   "food": "egg",
+   "url": "https://www.shwapno.com/paragon-brown-egg-12-pcs-pack-2",
+   "image": "https://d2t8nl1y0ie1km.cloudfront.net/images/thumbs/66377496211595380a8f1b81_Paragon-Brown-Egg-12-Pcs-12-Pcs-Pack_1.webp"
+  },
+  {
    "id": "6637664e694b3e503625eff5",
    "sku": "3100878",
    "name": "Purnava Omega 3 enriched Egg (12Pcs Pack)",
@@ -77,6 +92,21 @@
    "food": "egg",
    "url": "https://www.shwapno.com/purnava-vitamin-e-enriched-egg-12-pcs-pack-2",
    "image": "https://d2t8nl1y0ie1km.cloudfront.net/images/thumbs/66377496211595380a8f1b7d_Purnava-Vitamin-E-Enriched-Egg-12-Pcs-Pack_1.webp"
+  },
+  {
+   "id": "6680f6d9d214e738cb912a5c",
+   "sku": "3103269",
+   "name": "Quality Omega-3 Enriched Egg (12Pcs Pack Box)",
+   "category": "Eggs",
+   "pack": "12 pcs",
+   "price": 265,
+   "price_per_kg": 401.52,
+   "grams": 660,
+   "grams_estimated": true,
+   "in_stock": true,
+   "food": "egg",
+   "url": "https://www.shwapno.com/quality-omega-3-enriched-eggs12-pcs-pack-box",
+   "image": "https://d2t8nl1y0ie1km.cloudfront.net/images/thumbs/668135aaf077212bd74efb80_Quality-Omega-3-Enriched-Eggs12-Pcs-Pack-Box_1.webp"
   },
   {
    "id": "6680f6d8d214e738cb9129a3",
