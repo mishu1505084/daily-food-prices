@@ -1,6 +1,6 @@
 {
- "date": "2026-10-30",
- "updated": "2026-10-30T09:30:53+06:00",
+ "date": "2026-10-31",
+ "updated": "2026-10-31T09:29:51+06:00",
  "source": "https://www.shwapno.com",
  "items": [
   {
@@ -2409,8 +2409,8 @@
    "name": "Kakrol (Teasel Gourd)",
    "category": "Vegetables",
    "pack": "1 kg",
-   "price": 100,
-   "price_per_kg": 100.0,
+   "price": 90,
+   "price_per_kg": 90.0,
    "grams": 1000,
    "grams_estimated": false,
    "in_stock": true,
@@ -2844,8 +2844,8 @@
    "name": "Tomato Green & Red (Kacha Paka) kg",
    "category": "Vegetables",
    "pack": "1 kg",
-   "price": 180,
-   "price_per_kg": 180.0,
+   "price": 170,
+   "price_per_kg": 170.0,
    "grams": 1000,
    "grams_estimated": false,
    "in_stock": true,
